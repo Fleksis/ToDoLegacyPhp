@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="805a3dc8-6e4a-4f4e-9823-42cde307ca19" name="RenaraServers">
+        <fileTransfer rootFolder="/var/www/html" accessType="SFTP" host="90.139.59.118" port="22" sshConfigId="6578bfa4-367f-4cf3-9909-0e13c6090932" sshConfig="sodiumnitrate@90.139.59.118:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
