@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Models;
-require_once '../database/db.php';
 class User {
     private string $firstName;
     private string $lastName;
     private string $email;
     private string $password;
-    public function __construct(string $firstName, string $lastName, string $email, string $password)
-    {
+
+    public function __construct(string $firstName, string $lastName, string $email, string $password) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->email = $email;
@@ -31,14 +29,14 @@ class User {
         return $this->password;
     }
 
-    public function NewUser($conn):void {
+    public function register():void {
         $firstName = $this->Firstname();
         $lastName = $this->LastName();
         $email = $this->Email();
         $password = $this->Password();
 
         $sql = "INSERT INTO users (firstname, lastname, email, password) VALUES ('$firstName', '$lastName', '$email', '$password')";
-        $conn->exec($sql);
+        (new Database)->get()->exec($sql);
     }
 }
 

@@ -1,15 +1,6 @@
 <?php
-use App\Models\Validation;
-use App\Models\User;
 
-require '../database/db.php';
-
-spl_autoload_register(function($class){
-    $path = str_replace('\\', '/',"..\\".$class.'.php');
-    if (file_exists($path)) {
-        require $path;
-    }
-});
+include '../includes/autoloader.php';
 
 if(!empty($_POST)) {
     $firstname = $_POST['firstname'];
@@ -18,17 +9,18 @@ if(!empty($_POST)) {
     $password = $_POST['password'];
     $passwordConfirmation = $_POST['password_confirmation'];
 
-    if (Validation::Validate($firstname, array("required")) && Validation::Validate($lastname, array("require")) && Validation::Validate($email, array("required", "isEmail, isEmailExist")) && Validation::Validate($password, array("required", "minLength", "passwordConfirmation"), $passwordConfirmation)) {
+    if (   Validation::Validate($firstname, array("required"))
+        && Validation::Validate($lastname, array("require"))
+        && Validation::Validate($email, array("required", "isEmail", "isEmailExist"), emailValidateType: "register")
+        && Validation::Validate($password, array("required", "minLength", "passwordConfirmation"), passwordConfirmation: $passwordConfirmation)
+    ) {
         try {
             $newUser = new User($firstname, $lastname, $email, $password);
-            $conn = ConnectDatabase();
-            $newUser->newUser($conn);
+            $newUser->register();
+            echo "<div class='alert alert-green center-block'> <h3>New user is registered</h3> </div>";
         } catch(Exception $e) {
-            echo '<br>'.$e;
+            echo '<br>'. $e;
         }
-
-    } else {
-        echo '<div class="center-block" role="alert">Nederīgs epasts</div>';
     }
 }
 ?>
@@ -45,16 +37,16 @@ if(!empty($_POST)) {
 <body>
     <div class="center-block">
         <form method="POST">
-            <label class="input-padding" for="firstname">Firstname</label><br>
-            <input type="text" id="firstname" name="firstname" placeholder="First name">
-            <label class="input-padding" for="lastname">Lastname</label><br>
-            <input type="text" id="lastname" name="lastname" placeholder="Last name">
-            <label class="input-padding" for="email">Email</label><br>
-            <input type="email" id="email" name="email" placeholder="Email">
-            <label class="input-padding" for="password">Password</label><br>
-            <input type="password" id="password" name="password" placeholder="Password">
-            <label class="input-padding" for="password_confirmation">Repeat password</label><br>
-            <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm password"><br>
+            <label for="firstname">Firstname</label><br>
+            <input class="input" type="text" id="firstname" name="firstname" placeholder="First name"><br>
+            <label for="lastname">Lastname</label><br>
+            <input class="input" type="text" id="lastname" name="lastname" placeholder="Last name"><br>
+            <label for="email">Email</label><br>
+            <input class="input" type="email" id="email" name="email" placeholder="Email"><br>
+            <label for="password">Password</label><br>
+            <input class="input" type="password" id="password" name="password" placeholder="Password"><br>
+            <label for="password_confirmation">Repeat password</label><br>
+            <input class="input" type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm password"><br>
             <button type="submit">Submit</button>
         </form>
     </div>

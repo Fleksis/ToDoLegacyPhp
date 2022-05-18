@@ -1,20 +1,22 @@
 <?php
 $errors = [];
-use App\Models\Validation;
-use App\Models\User;
-require_once 'database/db.php';
 
-spl_autoload_register(function($class){
-    $path = str_replace('\\', '/', $class.'.php');
-    if (file_exists($path)) {
-        require $path;
-    }
-});
+include '../includes/autoloader.php';
 
 $user = new User("Renārs", "Gausiņš", "Renārs2003@gmail.com", "Renar123");
-echo $user->FirstName();
-echo $user->LastName();
-echo $user->Email();
+//echo $user->FirstName();
+//echo $user->LastName();
+//echo $user->Email();
+
+$stmt = (new Database)->get()->query("SELECT * FROM users");
+$user = $stmt->fetchAll();
+
+$asda = $user[0]['email'];
+foreach ($user as $row) {
+    echo $row['firstname']."<br />\n";
+}
+
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -24,7 +26,7 @@ echo $user->Email();
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ToDo List</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
     <div class="ToDo-Window">
