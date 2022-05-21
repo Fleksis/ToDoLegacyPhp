@@ -1,21 +1,24 @@
 <?php
-$errors = [];
-
 include '../includes/autoloader.php';
+session_start();
 
 $user = new User("Renārs", "Gausiņš", "Renārs2003@gmail.com", "Renar123");
-//echo $user->FirstName();
 //echo $user->LastName();
 //echo $user->Email();
 
 $stmt = (new Database)->get()->query("SELECT * FROM users");
 $user = $stmt->fetchAll();
 
-$asda = $user[0]['email'];
-foreach ($user as $row) {
-    echo $row['firstname']."<br />\n";
-}
+//$asda = $user[0]['email'];
+//foreach ($user as $row) {
+//    echo $row['firstname']."<br />\n";
+//}
 
+//error
+$email = $_SESSION['email'];
+$password = $_SESSION['password'];
+echo $email;
+echo $password;
 
 ?>
 <!doctype html>
@@ -29,29 +32,32 @@ foreach ($user as $row) {
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <div class="ToDo-Window">
-        <div class="ToDo-Form">
+    <div class="center-block navigation">
+        <?php
+            User::navigationBar();
+        ?>
+    </div>
+    <div class="task-block">
+        <div class="task-input">
             <form method="POST">
                 <label for="title">ToDo Title</label><br>
-                <input type="text" id="title" name="title"><br>
+                <input class="input" type="text" id="title" name="title" required><br>
                 <label for="description">Description</label><br>
-                <input type="text" id="description" name="description">
+                <textarea maxlength="250" wrap="soft" id="description" name="description" required></textarea>
+                <!--<input class="input" type="text" id="description" name="description"><br>-->
                 <button type="submit">Submit</button>
             </form>
-        </div>
-        <div class="ToDo-List">
             <?php
-                if (!empty($_POST)) {
-                    $errors[] = "ideals";
+                if(!empty($_POST)) {
+                    $tasks = new Tasks($_POST['title'], $_POST['description']);
+                    $tasks->save($_SESSION['email']);
                 }
             ?>
         </div>
-        <?php
-        foreach ($errors as $error) {
-            echo $error;
-        }
-        ?>
+            <?php
+                tasks::output($_SESSION['email']);
+            ?>
+        </div>
     </div>
-
 </body>
 </html>

@@ -1,6 +1,6 @@
 <?php
-
 include '../includes/autoloader.php';
+session_start();
 ?>
 <!doctype html>
 <html lang="en">
@@ -15,25 +15,21 @@ include '../includes/autoloader.php';
 <body>
     <?php
     if (!empty($_POST)) {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        if(    Validation::Validate($email, array("required", "isEmail", "isEmailExist"), emailValidateType: "login")
-            && Validation::Validate($password, array("required", "isPasswordCorrect"), email: $email)
-        ){
-            echo "<div class='alert alert-green center-block'> <h3>You successfully logged in</h3> </div>";
-        } else {
-            echo "<div class='alert alert-red center-block'> <h3>Password is incorrect</h3> </div>";
+        if(User::login($_POST['email'], $_POST['password'])) {
+            $url = 'index.php';
+            $_SESSION['email'] = $_POST['email'];
+            $_SESSION['password'] = $_POST['password'];
+            header('Location: '. $url);
         }
     }
     ?>
     <div class="center-block">
         <form method="POST">
             <label for="email">Email</label><br>
-            <input class="input" type="email" id="email" name="email" placeholder="Email"><br>
+            <input class="input" type="email" id="email" name="email" placeholder="Email" required><br>
 
             <label for="password">Password</label><br>
-            <input class="input" type="password" id="password" name="password" placeholder="Password"><br>
+            <input class="input" type="password" id="password" name="password" placeholder="Password" required><br>
 
             <button type="submit">Submit</button>
         </form>
